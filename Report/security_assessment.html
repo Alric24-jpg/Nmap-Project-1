@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>security_assessment.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="security-assessment-report">Security Assessment Report</h1>
+<h2 id="1-executive-summary">1. Executive Summary</h2>
+<p>This report documents a security assessment conducted against a deliberately vulnerable Linux system (Metasploitable2) within a controlled lab environment. The objective of the assessment was to identify exposed network services, analyze potential vulnerabilities, and validate the impact of selected high-risk findings.</p>
+<p>The assessment identified multiple exposed services, including a critical vulnerability in the FTP service that allowed unauthenticated remote shell access. Additional weaknesses affecting service availability were also observed. All testing was performed ethically and safely for educational purposes.</p>
+<hr>
+<h2 id="2-scope-and-environment">2. Scope and Environment</h2>
+<p><strong>Scope:</strong></p>
+<ul>
+<li>One target host running Metasploitable2</li>
+<li>Network-based testing only</li>
+<li>No denial-of-service or destructive testing performed</li>
+</ul>
+<p><strong>Environment:</strong></p>
+<ul>
+<li>Attacker Machine: Kali Linux (Virtual Machine)</li>
+<li>Target Machine: Metasploitable2 (Virtual Machine)</li>
+<li>Network Type: Isolated host-only / internal virtual network</li>
+</ul>
+<hr>
+<h2 id="3-methodology">3. Methodology</h2>
+<p>The assessment followed a structured penetration testing methodology:</p>
+<ol>
+<li>Host discovery to confirm system availability</li>
+<li>Full TCP port scanning to identify exposed services</li>
+<li>Service and version enumeration</li>
+<li>Vulnerability detection using Nmap NSE scripts</li>
+<li>Risk analysis and prioritization</li>
+<li>Controlled validation of one critical vulnerability using Metasploit</li>
+<li>Documentation and reporting</li>
+</ol>
+<p><img src="screenshots/scan1.png" alt="Figure 1: Nmap scan"></p>
+<hr>
+<h2 id="4-port-and-service-enumeration">4. Port and Service Enumeration</h2>
+<p>A full TCP port scan revealed multiple open services, including but not limited to:</p>
+<ul>
+<li>FTP (21)</li>
+<li>SSH (22)</li>
+<li>Telnet (23)</li>
+<li>HTTP (80)</li>
+<li>SMB (139, 445)</li>
+<li>Database services (MySQL, PostgreSQL)</li>
+<li>Remote management and legacy services</li>
+</ul>
+<p>The large attack surface indicated significant exposure and a lack of service hardening.</p>
+<p><img src="screenshots/scan3.png" alt="Figure 2: Nmap scan"></p>
+<hr>
+<h2 id="5-key-vulnerability-findings">5. Key Vulnerability Findings</h2>
+<h3 id="51-critical-vsftpd-234-backdoor-port-21">5.1 Critical: vsFTPd 2.3.4 Backdoor (Port 21)</h3>
+<p><strong>Description:</strong>
+The FTP service was identified as running vsFTPd version 2.3.4, which contains a known backdoor vulnerability allowing unauthenticated remote command execution.</p>
+<p><strong>Evidence:</strong></p>
+<ul>
+<li>Detected via Nmap service version detection</li>
+<li>Confirmed by Nmap NSE vulnerability scripts</li>
+</ul>
+<p><strong>Impact:</strong>
+An attacker could gain remote shell access without authentication, leading to full system compromise.</p>
+<p><strong>Validation:</strong>
+This vulnerability was successfully validated using the Metasploit Framework, resulting in a remote shell session. No further actions were performed beyond validation.</p>
+<p><strong>Risk Level:</strong> Critical</p>
+<p><strong>Recommendation:</strong></p>
+<ul>
+<li>Remove or upgrade the vulnerable FTP service</li>
+<li>Disable FTP if not required</li>
+<li>Implement strict access controls and monitoring</li>
+</ul>
+<p><img src="screenshots/shell.png" alt="Figure 3: Nmap scan"></p>
+<hr>
+<h3 id="52-medium-slowloris-denial-of-service-risk-port-80">5.2 Medium: Slowloris Denial-of-Service Risk (Port 80)</h3>
+<p><strong>Description:</strong>
+The HTTP service was identified as potentially vulnerable to Slowloris-style denial-of-service attacks, which can exhaust server resources by maintaining numerous partial HTTP connections.</p>
+<p><strong>Impact:</strong>
+An attacker could degrade or disrupt service availability.</p>
+<p><strong>Validation Decision:</strong>
+This vulnerability was not actively exploited due to the disruptive nature of denial-of-service attacks.</p>
+<p><strong>Risk Level:</strong> Medium</p>
+<p><strong>Recommendation:</strong></p>
+<ul>
+<li>Configure connection timeouts</li>
+<li>Use a reverse proxy or web application firewall</li>
+<li>Apply appropriate server hardening measures</li>
+</ul>
+<hr>
+<h2 id="6-risk-assessment-summary">6. Risk Assessment Summary</h2>
+<table>
+<thead>
+<tr>
+<th>Vulnerability</th>
+<th>Service</th>
+<th>Risk Level</th>
+<th>Validation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vsFTPd 2.3.4 Backdoor</td>
+<td>FTP</td>
+<td>Critical</td>
+<td>Validated</td>
+</tr>
+<tr>
+<td>Slowloris DoS Risk</td>
+<td>HTTP</td>
+<td>Medium</td>
+<td>Documented Only</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="7-conclusion">7. Conclusion</h2>
+<p>This assessment demonstrated how outdated services and insecure configurations can significantly increase system risk. Through structured reconnaissance, vulnerability analysis, and controlled validation, the assessment highlighted the importance of timely patching, service minimization, and secure configuration practices.</p>
+<hr>
+<h2 id="8-disclaimer">8. Disclaimer</h2>
+<p>This project was conducted in a controlled lab environment for educational purposes only. No unauthorized systems were tested, and no destructive actions were performed.</p>
+
+</body>
+</html>
